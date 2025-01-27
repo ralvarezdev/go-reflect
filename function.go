@@ -13,9 +13,9 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 ) {
 	// Get the function and its parameters
 	fnValue := reflect.ValueOf(fn)
-	paramValues := make([]reflect.Value, len(params))
+	paramsValues := make([]reflect.Value, len(params))
 	for i, param := range params {
-		paramValues[i] = reflect.ValueOf(param)
+		paramsValues[i] = reflect.ValueOf(param)
 	}
 
 	// Check if the function is valid
@@ -36,7 +36,7 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 
 	// Check if the parameter type matches the function's parameter type
 	var paramType, fnParamType reflect.Type
-	for i, paramValue := range paramValues {
+	for i, paramValue := range paramsValues {
 		paramType = paramValue.Type()
 		fnParamType = fnValue.Type().In(i)
 
@@ -50,16 +50,24 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 		}
 	}
 
-	return &fnValue, &paramValues, nil
+	return &fnValue, &paramsValues, nil
 }
 
-// CallFunction dynamically calls a function with some typed parameters
-func CallFunction(fnValue *reflect.Value, paramValues ...reflect.Value) (
+// UnsafeCallFunction calls a function with some typed parameters without checking if the function is valid
+func UnsafeCallFunction(fnValue *reflect.Value, paramsValues ...reflect.Value) (
 	[]interface{},
 	error,
 ) {
+	// Check if the function or the parameters values are nil
+	if fnValue == nil {
+		return nil, ErrNilFunctionValue
+	}
+	if paramsValues == nil {
+		paramsValues = make([]reflect.Value, 0)
+	}
+
 	// Call the function with the parameter
-	results := fnValue.Call(paramValues)
+	results := fnValue.Call(paramsValues)
 
 	// Convert the results to an interface slice
 	interfaceResults := make([]interface{}, len(results))
@@ -70,17 +78,17 @@ func CallFunction(fnValue *reflect.Value, paramValues ...reflect.Value) (
 	return interfaceResults, nil
 }
 
-// CheckAndCallFunction checks if a function is valid and calls it with some typed parameters
-func CheckAndCallFunction(fn interface{}, params ...interface{}) (
+// SafeCallFunction calls a function with some typed parameters after checking if the function is valid
+func SafeCallFunction(fn interface{}, params ...interface{}) (
 	[]interface{},
 	error,
 ) {
 	// Check if the function is valid
-	fnValue, paramValues, err := CheckFunction(fn, params...)
+	fnValue, paramsValues, err := CheckFunction(fn, params...)
 	if err != nil {
 		return nil, err
 	}
 
-	// Call the function with the parameter
-	return CallFunction(fnValue, *paramValues...)
+	// Call the function with the parameter (now, we are sure that the function is valid)
+	return UnsafeCallFunction(fnValue, *paramsValues...)
 }
