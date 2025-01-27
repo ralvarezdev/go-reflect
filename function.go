@@ -5,9 +5,10 @@ import (
 	"reflect"
 )
 
-// CallFunction dynamically calls a function with some typed parameters
-func CallFunction(fn interface{}, params ...interface{}) (
-	[]interface{},
+// CheckFunction checks if a function is valid
+func CheckFunction(fn interface{}, params ...interface{}) (
+	*reflect.Value,
+	*[]reflect.Value,
 	error,
 ) {
 	// Get the function and its parameters
@@ -19,14 +20,14 @@ func CallFunction(fn interface{}, params ...interface{}) (
 
 	// Check if the function is valid
 	if fnValue.Kind() != reflect.Func {
-		return nil, ErrNotAFunction
+		return nil, nil, ErrNotAFunction
 	}
 
 	// Check if the function has the correct number of parameters
 	paramsCount := len(params)
 	fnParamsCount := fnValue.Type().NumIn()
 	if paramsCount != fnParamsCount {
-		return nil, fmt.Errorf(
+		return nil, nil, fmt.Errorf(
 			ErrFunctionParameterCountMismatch,
 			fnParamsCount,
 			paramsCount,
@@ -40,7 +41,7 @@ func CallFunction(fn interface{}, params ...interface{}) (
 		fnParamType = fnValue.Type().In(i)
 
 		if paramType != fnParamType {
-			return nil, fmt.Errorf(
+			return nil, nil, fmt.Errorf(
 				ErrFunctionParameterTypeMismatch,
 				i,
 				fnParamType,
@@ -49,6 +50,14 @@ func CallFunction(fn interface{}, params ...interface{}) (
 		}
 	}
 
+	return &fnValue, &paramValues, nil
+}
+
+// CallFunction dynamically calls a function with some typed parameters
+func CallFunction(fnValue *reflect.Value, paramValues ...reflect.Value) (
+	[]interface{},
+	error,
+) {
 	// Call the function with the parameter
 	results := fnValue.Call(paramValues)
 
@@ -59,4 +68,19 @@ func CallFunction(fn interface{}, params ...interface{}) (
 	}
 
 	return interfaceResults, nil
+}
+
+// CheckAndCallFunction checks if a function is valid and calls it with some typed parameters
+func CheckAndCallFunction(fn interface{}, params ...interface{}) (
+	[]interface{},
+	error,
+) {
+	// Check if the function is valid
+	fnValue, paramValues, err := CheckFunction(fn, params...)
+	if err != nil {
+		return nil, err
+	}
+
+	// Call the function with the parameter
+	return CallFunction(fnValue, *paramValues...)
 }
