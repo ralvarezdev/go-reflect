@@ -9,8 +9,8 @@ func GetTypeOf(bodyType interface{}) reflect.Type {
 	return reflect.TypeOf(bodyType)
 }
 
-// CreateNewInstance creates a new instance of the given type
-func CreateNewInstance(bodyType interface{}) interface{} {
+// NewInstance creates a new instance of the given type
+func NewInstance(bodyType interface{}) interface{} {
 	// Get the reflect.Type of the bodyType
 	t := reflect.TypeOf(bodyType)
 
@@ -18,7 +18,7 @@ func CreateNewInstance(bodyType interface{}) interface{} {
 	return reflect.New(t).Interface()
 }
 
-// CreateNewInstanceFromType creates a new instance of the given type
-func CreateNewInstanceFromType(t reflect.Type) interface{} {
+// NewInstanceFromType creates a new instance of the given type
+func NewInstanceFromType(t reflect.Type) interface{} {
 	return reflect.New(t).Interface()
 }
