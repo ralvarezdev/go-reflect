@@ -69,10 +69,10 @@ func NewReflection(instance interface{}) *Reflection {
 	reflectedTypeName := GetTypeName(reflectedType)
 
 	return &Reflection{
-		instance:          instance,
-		reflectedValue:    reflectedValue,
-		reflectedType:     reflectedType,
-		reflectedTypeName: reflectedTypeName,
+		instance,
+		reflectedValue,
+		reflectedType,
+		reflectedTypeName,
 	}
 }
 
@@ -84,10 +84,10 @@ func NewDereferencedReflection(instance interface{}) *Reflection {
 	reflectedTypeName := GetTypeName(reflectedType)
 
 	return &Reflection{
-		instance:          instance,
-		reflectedValue:    reflectedValue,
-		reflectedType:     reflectedType,
-		reflectedTypeName: reflectedTypeName,
+		instance,
+		reflectedValue,
+		reflectedType,
+		reflectedTypeName,
 	}
 }
 
