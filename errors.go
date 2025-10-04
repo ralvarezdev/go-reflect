@@ -4,9 +4,12 @@ import (
 	"errors"
 )
 
-var (
-	ErrNotAFunction                   = errors.New("not a function")
+const (
 	ErrFunctionParameterCountMismatch = "function parameter count mismatch, expected %d, got %d"
 	ErrFunctionParameterTypeMismatch  = "function parameter type mismatch on index %d, expected %s, got %s"
-	ErrNilFunctionValue               = errors.New("nil function value")
+)
+
+var (
+	ErrNotAFunction     = errors.New("not a function")
+	ErrNilFunctionValue = errors.New("nil function value")
 )

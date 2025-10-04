@@ -92,21 +92,21 @@ func NewDereferencedReflection(instance interface{}) *Reflection {
 }
 
 // GetInstance returns the instance
-func (r *Reflection) GetInstance() interface{} {
+func (r Reflection) GetInstance() interface{} {
 	return r.instance
 }
 
 // GetReflectedValue returns the reflected value
-func (r *Reflection) GetReflectedValue() reflect.Value {
+func (r Reflection) GetReflectedValue() reflect.Value {
 	return r.reflectedValue
 }
 
 // GetReflectedType returns the reflected type
-func (r *Reflection) GetReflectedType() reflect.Type {
+func (r Reflection) GetReflectedType() reflect.Type {
 	return r.reflectedType
 }
 
 // GetReflectedTypeName returns the reflected type name
-func (r *Reflection) GetReflectedTypeName() string {
+func (r Reflection) GetReflectedTypeName() string {
 	return r.reflectedTypeName
 }
