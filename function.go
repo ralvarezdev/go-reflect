@@ -15,10 +15,10 @@ import (
 // Returns:
 //
 // - A pointer to the reflect.Value of the function
-// - A pointer to a slice of reflect.Value of the parameters
+// - A slice of reflect.Value of the parameters
 func CheckFunction(fn interface{}, params ...interface{}) (
 	*reflect.Value,
-	*[]reflect.Value,
+	[]reflect.Value,
 	error,
 ) {
 	// Get the function and its parameters
@@ -60,7 +60,7 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 		}
 	}
 
-	return &fnValue, &paramsValues, nil
+	return &fnValue, paramsValues, nil
 }
 
 // UnsafeCallFunction calls a function with some typed parameters without checking if the function is valid
@@ -120,5 +120,5 @@ func SafeCallFunction(fn interface{}, params ...interface{}) (
 	}
 
 	// Call the function with the parameter (now, we are sure that the function is valid)
-	return UnsafeCallFunction(fnValue, *paramsValues...)
+	return UnsafeCallFunction(fnValue, paramsValues...)
 }
