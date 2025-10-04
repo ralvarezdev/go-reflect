@@ -6,6 +6,16 @@ import (
 )
 
 // CheckFunction checks if a function is valid
+//
+// Parameters:
+//
+// - fn: The function to check
+// - params: The parameters to pass to the function
+//
+// Returns:
+//
+// - A pointer to the reflect.Value of the function
+// - A pointer to a slice of reflect.Value of the parameters
 func CheckFunction(fn interface{}, params ...interface{}) (
 	*reflect.Value,
 	*[]reflect.Value,
@@ -54,6 +64,16 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 }
 
 // UnsafeCallFunction calls a function with some typed parameters without checking if the function is valid
+//
+// Parameters:
+//
+// - fnValue: The reflect.Value of the function to call
+// - paramsValues: The reflect.Value of the parameters to pass to the function
+//
+// Returns:
+//
+// - A slice of interface{} with the results of the function call
+// - An error if the function value is nil
 func UnsafeCallFunction(fnValue *reflect.Value, paramsValues ...reflect.Value) (
 	[]interface{},
 	error,
@@ -79,6 +99,16 @@ func UnsafeCallFunction(fnValue *reflect.Value, paramsValues ...reflect.Value) (
 }
 
 // SafeCallFunction calls a function with some typed parameters after checking if the function is valid
+//
+// Parameters:
+//
+// - fn: The function to call
+// - params: The parameters to pass to the function
+//
+// Returns:
+//
+// - A slice of interface{} with the results of the function call
+// - An error if the function is not valid
 func SafeCallFunction(fn interface{}, params ...interface{}) (
 	[]interface{},
 	error,
