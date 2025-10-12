@@ -2,6 +2,8 @@ package go_reflect
 
 import (
 	"reflect"
+
+	gostrings "github.com/ralvarezdev/go-strings"
 )
 
 type (
@@ -208,7 +210,7 @@ func (r Reflection) IsStruct() bool {
 //
 // Parameters:
 //
-// - fieldName: the field name to check
+// - fieldName: the field name to check (works for exported fields only)
 //
 // Returns:
 //
@@ -217,6 +219,11 @@ func (r Reflection) HasField(fieldName string) bool {
 	if !r.IsStruct() {
 		return false
 	}
+
+	// Convert field name to camel case, because the field must be exported
+	fieldName = gostrings.ToCamelCase(fieldName)
+
+	// Check if the struct has the field
 	_, found := r.GetDereferenceReflectedType().FieldByName(fieldName)
 	return found
 }
