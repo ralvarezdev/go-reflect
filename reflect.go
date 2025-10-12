@@ -174,6 +174,18 @@ func (r Reflection) GetReflectedType() reflect.Type {
 	return r.reflectedType
 }
 
+// GetDereferenceReflectedType returns the dereferenced reflected type
+//
+// Returns:
+//
+// - reflect.Type: the dereferenced reflected type
+func (r Reflection) GetDereferenceReflectedType() reflect.Type {
+	if r.reflectedType.Kind() == reflect.Ptr {
+		return r.reflectedType.Elem()
+	}
+	return r.reflectedType
+}
+
 // GetReflectedTypeName returns the reflected type name
 //
 // Returns:
@@ -181,4 +193,30 @@ func (r Reflection) GetReflectedType() reflect.Type {
 // - string: the reflected type name
 func (r Reflection) GetReflectedTypeName() string {
 	return r.reflectedTypeName
+}
+
+// IsStruct checks if the reflected type is a struct
+//
+// Returns:
+//
+// - bool: true if the reflected type is a struct, false otherwise
+func (r Reflection) IsStruct() bool {
+	return r.GetDereferenceReflectedType().Kind() == reflect.Struct
+}
+
+// HasField checks if the reflected type has a field with the given name
+//
+// Parameters:
+//
+// - fieldName: the field name to check
+//
+// Returns:
+//
+// - bool: true if the reflected type has the field, false otherwise
+func (r Reflection) HasField(fieldName string) bool {
+	if !r.IsStruct() {
+		return false
+	}
+	_, found := r.GetDereferenceReflectedType().FieldByName(fieldName)
+	return found
 }
