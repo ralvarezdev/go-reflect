@@ -10,6 +10,7 @@ const (
 )
 
 var (
-	ErrNotAFunction     = errors.New("not a function")
-	ErrNilFunctionValue = errors.New("nil function value")
+	ErrNotAFunction                  = errors.New("not a function")
+	ErrNilFunctionValue              = errors.New("nil function value")
+	ErrFailedToMapToStructNotAStruct = errors.New("failed to map to struct: destination is not a struct")
 )
