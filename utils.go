@@ -1,19 +1,19 @@
-package go_reflect
+package goreflect
 
 import (
 	"reflect"
 )
 
-// UniqueTypeReference returns a unique string representation of the type of the given interface{}
+// UniqueTypeReference returns a unique string representation of the type of the given any
 //
 // Parameters:
 //
-//   - i: The interface{} to get the unique type reference from
+//   - i: The any to get the unique type reference from
 //
 // Returns:
 //
 //   - string: The unique type reference in the format "package.TypeName"
-func UniqueTypeReference(i interface{}) string {
+func UniqueTypeReference(i any) string {
 	t := reflect.TypeOf(i)
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
@@ -21,7 +21,7 @@ func UniqueTypeReference(i interface{}) string {
 	return t.PkgPath() + "." + t.Name()
 }
 
-// MapToStruct maps a map[string]interface{} to a struct
+// MapToStruct maps a map[string]any to a struct
 //
 // Parameters:
 //
@@ -31,7 +31,7 @@ func UniqueTypeReference(i interface{}) string {
 // Returns:
 //
 //   - error: The error if any
-func MapToStruct(m map[string]interface{}, dest interface{}) error {
+func MapToStruct(m map[string]any, dest any) error {
 	// Dereference the destination
 	v := reflect.ValueOf(dest)
 	if v.Kind() == reflect.Ptr {
@@ -61,8 +61,8 @@ func MapToStruct(m map[string]interface{}, dest interface{}) error {
 		switch field.Kind() {
 		case reflect.Struct:
 			// Handle nested structs
-			nestedMap, ok := val.(map[string]interface{})
-			if ok {
+			nestedMap, nestedOk := val.(map[string]any)
+			if nestedOk {
 				if err := MapToStruct(
 					nestedMap,
 					field.Addr().Interface(),

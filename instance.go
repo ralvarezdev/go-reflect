@@ -1,4 +1,4 @@
-package go_reflect
+package goreflect
 
 import (
 	"reflect"
@@ -13,7 +13,7 @@ import (
 // Returns:
 //
 //   - reflect.Type: The type of the given bodyType
-func GetTypeOf(bodyType interface{}) reflect.Type {
+func GetTypeOf(bodyType any) reflect.Type {
 	return reflect.TypeOf(bodyType)
 }
 
@@ -25,8 +25,8 @@ func GetTypeOf(bodyType interface{}) reflect.Type {
 //
 // Returns:
 //
-// - interface{}: A pointer to a new instance of the given type
-func NewInstance(bodyType interface{}) interface{} {
+// - any: A pointer to a new instance of the given type
+func NewInstance(bodyType any) any {
 	// Get the reflect.Type of the bodyType
 	t := reflect.TypeOf(bodyType)
 
@@ -42,7 +42,7 @@ func NewInstance(bodyType interface{}) interface{} {
 //
 // Returns:
 //
-// - interface{}: A pointer to a new instance of the given type
-func NewInstanceFromType(t reflect.Type) interface{} {
+// - any: A pointer to a new instance of the given type
+func NewInstanceFromType(t reflect.Type) any {
 	return reflect.New(t).Interface()
 }

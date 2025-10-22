@@ -1,4 +1,4 @@
-package go_reflect
+package goreflect
 
 import (
 	"reflect"
@@ -9,7 +9,7 @@ import (
 type (
 	// Reflection struct to hold reflection data
 	Reflection struct {
-		instance          interface{}
+		instance          any
 		reflectedValue    reflect.Value
 		reflectedType     reflect.Type
 		reflectedTypeName string
@@ -25,7 +25,7 @@ type (
 // Returns:
 //
 // - reflect.Value: the value reflection
-func GetValue(instance interface{}) reflect.Value {
+func GetValue(instance any) reflect.Value {
 	// Check if the instance is nil
 	if instance == nil {
 		return reflect.Value{}
@@ -42,7 +42,7 @@ func GetValue(instance interface{}) reflect.Value {
 // Returns:
 //
 // - reflect.Value: the dereferenced value reflection
-func GetDereferencedValue(instance interface{}) reflect.Value {
+func GetDereferencedValue(instance any) reflect.Value {
 	// Reflect data
 	valueReflection := GetValue(instance)
 
@@ -62,7 +62,7 @@ func GetDereferencedValue(instance interface{}) reflect.Value {
 // Returns:
 //
 // - reflect.Type: the type reflection
-func GetType(instance interface{}) reflect.Type {
+func GetType(instance any) reflect.Type {
 	// Check if the instance is nil
 	if instance == nil {
 		return nil
@@ -79,7 +79,7 @@ func GetType(instance interface{}) reflect.Type {
 // Returns:
 //
 // - reflect.Type: the dereferenced type reflection
-func GetDereferencedType(instance interface{}) reflect.Type {
+func GetDereferencedType(instance any) reflect.Type {
 	// Reflect data
 	typeReflection := GetType(instance)
 
@@ -112,7 +112,7 @@ func GetTypeName(typeReflection reflect.Type) string {
 // Returns:
 //
 // - *Reflection: the reflection instance
-func NewReflection(instance interface{}) *Reflection {
+func NewReflection(instance any) *Reflection {
 	// Reflect data
 	reflectedValue := GetValue(instance)
 	reflectedType := GetType(instance)
@@ -135,7 +135,7 @@ func NewReflection(instance interface{}) *Reflection {
 // Returns:
 //
 // - *Reflection: the reflection instance
-func NewDereferencedReflection(instance interface{}) *Reflection {
+func NewDereferencedReflection(instance any) *Reflection {
 	// Reflect data
 	reflectedValue := GetDereferencedValue(instance)
 	reflectedType := GetDereferencedType(instance)
@@ -153,8 +153,8 @@ func NewDereferencedReflection(instance interface{}) *Reflection {
 //
 // Returns:
 //
-// - interface{}: the instance
-func (r Reflection) GetInstance() interface{} {
+// - any: the instance
+func (r Reflection) GetInstance() any {
 	return r.instance
 }
 

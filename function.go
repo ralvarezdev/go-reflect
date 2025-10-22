@@ -1,4 +1,4 @@
-package go_reflect
+package goreflect
 
 import (
 	"fmt"
@@ -9,22 +9,23 @@ import (
 //
 // Parameters:
 //
-// - fn: The function to check
-// - params: The parameters to pass to the function
+// - reflectFn: The function to check
+// - reflectParams: The parameters to pass to the function
 //
 // Returns:
 //
 // - A pointer to the reflect.Value of the function
 // - A slice of reflect.Value of the parameters
-func CheckFunction(fn interface{}, params ...interface{}) (
-	*reflect.Value,
-	[]reflect.Value,
-	error,
+// - An error if the function is not valid
+func CheckFunction(reflectFn any, reflectParams ...any) (
+	reflectedFn *reflect.Value,
+	reflectedParams []reflect.Value,
+	err error,
 ) {
 	// Get the function and its parameters
-	fnValue := reflect.ValueOf(fn)
-	paramsValues := make([]reflect.Value, len(params))
-	for i, param := range params {
+	fnValue := reflect.ValueOf(reflectFn)
+	paramsValues := make([]reflect.Value, len(reflectParams))
+	for i, param := range reflectParams {
 		paramsValues[i] = reflect.ValueOf(param)
 	}
 
@@ -34,7 +35,7 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 	}
 
 	// Check if the function has the correct number of parameters
-	paramsCount := len(params)
+	paramsCount := len(reflectParams)
 	fnParamsCount := fnValue.Type().NumIn()
 	if paramsCount != fnParamsCount {
 		return nil, nil, fmt.Errorf(
@@ -72,10 +73,10 @@ func CheckFunction(fn interface{}, params ...interface{}) (
 //
 // Returns:
 //
-// - A slice of interface{} with the results of the function call
+// - A slice of any with the results of the function call
 // - An error if the function value is nil
 func UnsafeCallFunction(fnValue *reflect.Value, paramsValues ...reflect.Value) (
-	[]interface{},
+	[]any,
 	error,
 ) {
 	// Check if the function or the parameters values are nil
@@ -90,7 +91,7 @@ func UnsafeCallFunction(fnValue *reflect.Value, paramsValues ...reflect.Value) (
 	results := fnValue.Call(paramsValues)
 
 	// Convert the results to an interface slice
-	interfaceResults := make([]interface{}, len(results))
+	interfaceResults := make([]any, len(results))
 	for i, result := range results {
 		interfaceResults[i] = result.Interface()
 	}
@@ -107,10 +108,10 @@ func UnsafeCallFunction(fnValue *reflect.Value, paramsValues ...reflect.Value) (
 //
 // Returns:
 //
-// - A slice of interface{} with the results of the function call
+// - A slice of any with the results of the function call
 // - An error if the function is not valid
-func SafeCallFunction(fn interface{}, params ...interface{}) (
-	[]interface{},
+func SafeCallFunction(fn any, params ...any) (
+	[]any,
 	error,
 ) {
 	// Check if the function is valid
