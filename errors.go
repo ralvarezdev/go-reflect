@@ -13,4 +13,6 @@ var (
 	ErrNotAFunction                  = errors.New("not a function")
 	ErrNilFunctionValue              = errors.New("nil function value")
 	ErrFailedToMapToStructNotAStruct = errors.New("failed to map to struct: destination is not a struct")
+	ErrNilMap 						= errors.New("nil map")
+	ErrNilDestination 				= errors.New("nil destination")
 )

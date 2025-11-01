@@ -32,46 +32,53 @@ func UniqueTypeReference(i any) string {
 //
 //   - error: The error if any
 func MapToStruct(m map[string]any, dest any) error {
-	// Dereference the destination
-	v := reflect.ValueOf(dest)
-	if v.Kind() == reflect.Ptr {
-		v = v.Elem()
+	// Check if the map is nil
+	if m == nil {
+		return ErrNilMap
 	}
+	
+	// Check if the destination is nil
+	if dest == nil {
+		return ErrNilDestination
+	}
+	
+	// Dereference the destination
+	reflectValue := GetDereferencedValue(dest)
 
 	// Ensure the destination is a struct
-	t := v.Type()
-	if t.Kind() != reflect.Struct {
+	reflectType := reflectValue.Type()
+	if reflectType.Kind() != reflect.Struct {
 		return ErrFailedToMapToStructNotAStruct
 	}
 
 	// Map the fields
-	for i := 0; i < v.NumField(); i++ {
+	for i := 0; i < reflectType.NumField(); i++ {
 		// Get the field and its type
-		field := v.Field(i)
-		fieldType := t.Field(i)
+		fieldValue := reflectValue.Field(i)
+		fieldType := reflectType.Field(i)
+		fieldName := fieldType.Name
 
 		// Check if the field exists in the map and is settable
-		key := fieldType.Name
-		val, ok := m[key]
-		if !ok || !field.CanSet() {
+		value, ok := m[fieldName]
+		if !ok || !fieldValue.CanSet() {
 			continue
 		}
 
 		// Set the field value based on its kind
-		switch field.Kind() {
+		switch fieldValue.Kind() {
 		case reflect.Struct:
 			// Handle nested structs
-			nestedMap, nestedOk := val.(map[string]any)
+			nestedMap, nestedOk := value.(map[string]any)
 			if nestedOk {
 				if err := MapToStruct(
 					nestedMap,
-					field.Addr().Interface(),
+					fieldValue.Addr().Interface(),
 				); err != nil {
 					return err
 				}
 			}
 		default:
-			field.Set(reflect.ValueOf(val).Convert(field.Type()))
+			fieldValue.Set(reflect.ValueOf(value).Convert(fieldType.Type))
 		}
 	}
 	return nil
