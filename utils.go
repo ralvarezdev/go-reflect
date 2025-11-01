@@ -76,3 +76,16 @@ func MapToStruct(m map[string]any, dest any) error {
 	}
 	return nil
 }
+
+// IsStructFieldExported checks if a struct field is exported
+// 
+// Parameters:
+// 
+//   - field: The reflect.StructField to check
+// 
+// Returns:
+// 
+//  - bool: True if the field is exported, false otherwise
+func IsStructFieldExported(field reflect.StructField) bool {
+	return field.PkgPath == ""
+}
